@@ -25,22 +25,25 @@ class Client
 
     public function geocode($address)
     {
-        $longitude = null;
-        $latitude = null;
+        $lat = null;
+        $lng = null;
         try {
        
             // BUILD REQUEST
-            $request = $this->client->get('geocode', ['query' => [
+            $request = $this->guzzleClient->get('geocode', ['query' => [
                 'address' => $address,
-                'key' => $this->api_key,
+                'key' => $this->apiKey,
             ]]);
 
             // EXTRACT DATA
             $data = json_decode($request->getBody(), true);
             if (isset($data['status']) && $data['status'] == 'OK') {
                 $location = $data['results'][0]['geometry']['location'];
-                $longitude = $location['lng'];
-                $latitude = $location['lat'];
+                $lat = $location['lat'];
+                $lng = $location['lng'];
+            }
+            else {
+                return null;
             }
 
         } 
@@ -50,8 +53,8 @@ class Client
 
         // compile result
         $result = new \stdClass;
-        $result->latitude = $latitude;
-        $result->longitude = $longitude;
+        $result->lat = $lat;
+        $result->lng = $lng;
         
         return $result;
     }
