@@ -1,0 +1,19 @@
+{
+  "name": "lawnstarter/geocoding-sdk-php",
+  "description": "PHP SDK for google geocoding api",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "Lawnstarter\\": "src/Lawnstarter"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": ">=6.0",
+    "laravel/framework": "~5.0",
+    "phpunit/phpunit": ">4.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.0"
+  }
+}
