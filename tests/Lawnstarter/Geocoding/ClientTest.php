@@ -37,7 +37,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock
             ->shouldReceive('get')
             ->withArgs(function ($endpoint, $details) {
-                return $endpoint === 'geocode'
+                return $endpoint === 'geocode/json'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
             })
@@ -66,7 +66,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock
             ->shouldReceive('get')
             ->withArgs(function ($endpoint, $details) {
-                return $endpoint === 'geocode'
+                return $endpoint === 'geocode/json'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
             })
@@ -91,7 +91,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock
             ->shouldReceive('get')
             ->withArgs(function ($endpoint, $details) {
-                return $endpoint === 'geocode'
+                return $endpoint === 'geocode/json'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
             })
