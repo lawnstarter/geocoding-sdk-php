@@ -15,7 +15,7 @@ class Client
 
         if (is_null($guzzleClient)) {
             $guzzleClient = new GuzzleClient([
-                'base_uri' => 'https://maps.googleapis.com/maps/api/json/'
+                'base_uri' => 'https://maps.googleapis.com/maps/api/'
             ]);
         }
 
@@ -29,7 +29,7 @@ class Client
         try {
 
             // BUILD REQUEST
-            $request = $this->guzzleClient->get('geocode', ['query' => [
+            $request = $this->guzzleClient->get('geocode/json', ['query' => [
                 'address' => $address,
                 'key' => $this->apiKey,
             ]]);
