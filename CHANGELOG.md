@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.1.0...1.1.1) (2019-08-12)
+
+
+### Bug Fixes
+
+* **API-10174:** fix geocoding url ([4829346](https://github.com/lawnstarter/geocoding-sdk-php/commit/4829346))
+
 # [1.1.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.0.0...1.1.0) (2019-08-08)
 
 
