@@ -3,7 +3,6 @@
 namespace Lawnstarter\Geocoding;
 
 use GuzzleHttp\Client as GuzzleClient;
-use Mockery\Exception;
 
 class Client
 {
@@ -16,7 +15,7 @@ class Client
 
         if (is_null($guzzleClient)) {
             $guzzleClient = new GuzzleClient([
-                'base_uri' => 'https://maps.googleapis.com/maps/api/'
+                'base_uri' => 'https://maps.googleapis.com/maps/api/json/'
             ]);
         }
 
@@ -28,7 +27,7 @@ class Client
         $lat = null;
         $lng = null;
         try {
-       
+
             // BUILD REQUEST
             $request = $this->guzzleClient->get('geocode', ['query' => [
                 'address' => $address,
@@ -41,13 +40,10 @@ class Client
                 $location = $data['results'][0]['geometry']['location'];
                 $lat = $location['lat'];
                 $lng = $location['lng'];
-            }
-            else {
+            } else {
                 return null;
             }
-
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new GeocodingException($e->getMessage(), 0, $e);
         }
 
@@ -55,7 +51,7 @@ class Client
         $result = new \stdClass;
         $result->lat = $lat;
         $result->lng = $lng;
-        
+
         return $result;
     }
 }
