@@ -1,4 +1,5 @@
 <?php
+
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response;
 use function GuzzleHttp\json_encode;
@@ -23,7 +24,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
             ],
         ]);
     }
-    
+
     public function test_geocode_returns_latitude_and_longitude()
     {
         // mocks
@@ -35,7 +36,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock = Mockery::mock(GuzzleClient::class);
         $guzzleClientMock
             ->shouldReceive('get')
-            ->withArgs(function($endpoint, $details) {
+            ->withArgs(function ($endpoint, $details) {
                 return $endpoint === 'geocode'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
@@ -64,7 +65,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock = Mockery::mock(GuzzleClient::class);
         $guzzleClientMock
             ->shouldReceive('get')
-            ->withArgs(function($endpoint, $details) {
+            ->withArgs(function ($endpoint, $details) {
                 return $endpoint === 'geocode'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
@@ -89,7 +90,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $guzzleClientMock = Mockery::mock(GuzzleClient::class);
         $guzzleClientMock
             ->shouldReceive('get')
-            ->withArgs(function($endpoint, $details) {
+            ->withArgs(function ($endpoint, $details) {
                 return $endpoint === 'geocode'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
@@ -101,5 +102,4 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $client = new Client('test_google_api_key', $guzzleClientMock);
         $result = $client->geocode('1234 Rainbow Road');
     }
-
 }
