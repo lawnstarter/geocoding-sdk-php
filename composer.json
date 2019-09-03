@@ -2,7 +2,7 @@
   "name": "lawnstarter/geocoding-sdk-php",
   "description": "PHP SDK for google geocoding api",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Lawnstarter\\": "src/Lawnstarter"
