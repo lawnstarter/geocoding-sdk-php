@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.1.2...1.2.0) (2020-01-24)
+
+
+### Features
+
+* **ENGE-1253:** support laravel 6.0 ([d4e775b](https://github.com/lawnstarter/geocoding-sdk-php/commit/d4e775b))
+
 ## [1.1.2](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.1.1...1.1.2) (2019-08-12)
 
 
