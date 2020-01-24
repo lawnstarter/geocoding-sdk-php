@@ -10,7 +10,7 @@
   },
   "require": {
     "guzzlehttp/guzzle": ">=6.0",
-    "laravel/framework": "~5.0",
+    "laravel/framework": ">=5.0",
     "phpunit/phpunit": ">4.0"
   },
   "require-dev": {
