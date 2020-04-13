@@ -15,11 +15,17 @@ class Client
 
         if (is_null($guzzleClient)) {
             $guzzleClient = new GuzzleClient([
-                'base_uri' => 'https://maps.googleapis.com/maps/api/'
+                'base_uri' => 'https://maps.googleapis.com/maps/api/',
+                'timeout' => 10,
             ]);
         }
 
         $this->guzzleClient = $guzzleClient;
+    }
+
+    public function getGuzzleClient()
+    {
+        return $this->guzzleClient;
     }
 
     public function geocode($address)
