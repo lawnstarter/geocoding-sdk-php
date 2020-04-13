@@ -7,7 +7,6 @@ use Lawnstarter\Geocoding\Client;
 
 class ClientTest extends Orchestra\Testbench\TestCase
 {
-
     protected function getGeocodeResponse($status, $lat, $lng)
     {
         return json_encode([
@@ -23,6 +22,14 @@ class ClientTest extends Orchestra\Testbench\TestCase
                 ],
             ],
         ]);
+    }
+
+    public function test_construct_sets_default_timeout_of_10s()
+    {
+        $client = new Client('test_google_api_key');
+        $guzzleClient =  $client->getGuzzleClient();
+
+        $this->assertEquals(10, $guzzleClient->getConfig('timeout'));
     }
 
     public function test_geocode_returns_latitude_and_longitude()
