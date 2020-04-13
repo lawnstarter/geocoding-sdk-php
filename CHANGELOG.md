@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.2.0...1.3.0) (2020-04-13)
+
+
+### Features
+
+* **ENGE-768:** added 10s default timeout ([9010a89](https://github.com/lawnstarter/geocoding-sdk-php/commit/9010a89))
+
 # [1.2.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.1.2...1.2.0) (2020-01-24)
 
 
