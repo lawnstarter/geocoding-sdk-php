@@ -61,7 +61,7 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $this->assertEquals(2, $result->lng);
         $this->assertObjectHasAttribute('data', $result);
         $this->assertNotNull($result->data);
-        $this->assertAr($this->getGeocodeResponse('OK', 1, 2), json_encode($result->data));
+        $this->assertEquals($this->getGeocodeResponse('OK', 1, 2), json_encode($result->data));
     }
 
     public function test_geocode_returns_null_if_geocoding_fails()
