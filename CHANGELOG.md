@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.3.0...1.4.0) (2022-05-21)
+
+
+### Features
+
+* **ELBA-724:** client ([d011896](https://github.com/lawnstarter/geocoding-sdk-php/commit/d011896))
+
 # [1.3.0](https://github.com/lawnstarter/geocoding-sdk-php/compare/1.2.0...1.3.0) (2020-04-13)
 
 
