@@ -32,6 +32,7 @@ class Client
     {
         $lat = null;
         $lng = null;
+        $data = null;
         try {
 
             // BUILD REQUEST
@@ -57,6 +58,7 @@ class Client
         $result = new \stdClass;
         $result->lat = $lat;
         $result->lng = $lng;
+        $result->data = $data;
 
         return $result;
     }
