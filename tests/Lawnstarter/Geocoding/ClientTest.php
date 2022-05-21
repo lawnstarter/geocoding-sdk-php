@@ -59,6 +59,9 @@ class ClientTest extends Orchestra\Testbench\TestCase
         $this->assertNotNull($result);
         $this->assertEquals(1, $result->lat);
         $this->assertEquals(2, $result->lng);
+        $this->assertObjectHasAttribute('data', $result);
+        $this->assertNotNull($result->data);
+        $this->assertEquals($this->getGeocodeResponse('OK', 1, 2));
     }
 
     public function test_geocode_returns_null_if_geocoding_fails()
