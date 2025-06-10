@@ -2,7 +2,7 @@
 
 namespace Lawnstarter\Geocoding;
 
-use \Exception;
+use Exception;
 
 class GeocodingException extends Exception
 {

@@ -2,64 +2,57 @@
 
 namespace Lawnstarter\Geocoding;
 
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
+use stdClass;
 
 class Client
 {
-    protected $apiKey;
-    protected $guzzleClient;
+    private const BASE_URI = 'https://maps.googleapis.com/maps/api/';
+    private const TIMEOUT_SECONDS = 10;
 
-    public function __construct($apiKey, GuzzleClient $guzzleClient = null)
-    {
-        $this->apiKey = $apiKey;
+    public function __construct(
+        private readonly string $apiKey,
+        private readonly GuzzleClient $guzzleClient = new GuzzleClient([
+            'base_uri' => self::BASE_URI,
+            'timeout' => self::TIMEOUT_SECONDS,
+        ])
+    )
+    {}
 
-        if (is_null($guzzleClient)) {
-            $guzzleClient = new GuzzleClient([
-                'base_uri' => 'https://maps.googleapis.com/maps/api/',
-                'timeout' => 10,
-            ]);
-        }
-
-        $this->guzzleClient = $guzzleClient;
-    }
-
-    public function getGuzzleClient()
+    public function getGuzzleClient(): GuzzleClient
     {
         return $this->guzzleClient;
     }
 
-    public function geocode($address)
+    /**
+     * @throws GeocodingException
+     */
+    public function geocode(string $address): ?stdClass
     {
-        $lat = null;
-        $lng = null;
-        $data = null;
         try {
+            $response = $this->guzzleClient->get('geocode/json', [
+                'query' => [
+                    'address' => $address,
+                    'key' => $this->apiKey,
+                ],
+            ]);
 
-            // BUILD REQUEST
-            $request = $this->guzzleClient->get('geocode/json', ['query' => [
-                'address' => $address,
-                'key' => $this->apiKey,
-            ]]);
+            $data = json_decode($response->getBody()->getContents(), true);
 
-            // EXTRACT DATA
-            $data = json_decode($request->getBody(), true);
-            if (isset($data['status']) && $data['status'] == 'OK') {
-                $location = $data['results'][0]['geometry']['location'];
-                $lat = $location['lat'];
-                $lng = $location['lng'];
-            } else {
+            if (($data['status'] ?? null) !== 'OK') {
                 return null;
             }
-        } catch (\Exception $e) {
-            throw new GeocodingException($e->getMessage(), 0, $e);
+
+            $location = $data['results'][0]['geometry']['location'];
+
+            return (object)[
+                'lat' => $location['lat'],
+                'lng' => $location['lng'],
+                'data' => $data,
+            ];
+        } catch (Exception $e) {
+            throw new GeocodingException($e->getMessage(), previous: $e);
         }
-
-        // compile result
-        $result = new \stdClass;
-        $result->lat = $lat;
-        $result->lng = $lng;
-        $result->data = $data;
-
-        return $result;
     }
 }
