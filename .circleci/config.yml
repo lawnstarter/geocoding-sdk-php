@@ -6,7 +6,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/php:8.2-node
+      - image: cimg/php:8.2-node
 
     working_directory: ~/geocoding-sdk-php
 
@@ -39,7 +39,7 @@ jobs:
           command: phpdbg -qrr ./vendor/bin/phpunit
   release:
     docker:
-      - image: circleci/php:8.2-node
+      - image: cimg/php:8.2-node
 
     working_directory: ~/geocoding-sdk-php
 
