@@ -9,11 +9,10 @@
     }
   },
   "require": {
-    "guzzlehttp/guzzle": ">=6.0",
-    "laravel/framework": ">=5.0",
-    "phpunit/phpunit": ">4.0"
+    "guzzlehttp/guzzle": ">=6.0"
   },
   "require-dev": {
-    "orchestra/testbench": "~3.0"
+    "phpunit/phpunit": "^11.5",
+    "mockery/mockery": "^1.6"
   }
 }

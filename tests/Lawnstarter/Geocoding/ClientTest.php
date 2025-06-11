@@ -1,13 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Tests\Lawnstarter\Geocoding;
+
+use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response;
-use function GuzzleHttp\json_encode;
+use GuzzleHttp\Psr7\Stream;
 use Lawnstarter\Geocoding\Client;
+use Lawnstarter\Geocoding\GeocodingException;
+use Mockery;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 
-class ClientTest extends Orchestra\Testbench\TestCase
+class ClientTest extends TestCase
 {
-    protected function getGeocodeResponse($status, $lat, $lng)
+    protected function tearDown(): void
+    {
+        Mockery::close();
+    }
+
+    private function getGeocodeResponse(string $status, float $lat, float $lng): string
     {
         return json_encode([
             'status' => $status,
@@ -24,92 +38,90 @@ class ClientTest extends Orchestra\Testbench\TestCase
         ]);
     }
 
-    public function test_construct_sets_default_timeout_of_10s()
+    #[Test]
+    public function it_sets_default_timeout_of_10_seconds(): void
     {
         $client = new Client('test_google_api_key');
-        $guzzleClient =  $client->getGuzzleClient();
+        $guzzleClient = $client->getGuzzleClient();
 
         $this->assertEquals(10, $guzzleClient->getConfig('timeout'));
     }
 
-    public function test_geocode_returns_latitude_and_longitude()
+    #[Test]
+    public function it_returns_lat_lng_on_successful_geocode(): void
     {
-        // mocks
+        $expectedJsonString = $this->getGeocodeResponse('OK', 1.0, 2.0);
+        $resource = fopen('php://temp', 'r+');
+        fwrite($resource, $expectedJsonString);
+        fseek($resource, 0);
+
         $responseMock = Mockery::mock(Response::class);
-        $responseMock
-            ->shouldReceive('getBody')
+        $responseMock->shouldReceive('getBody')
             ->once()
-            ->andReturn($this->getGeocodeResponse('OK', 1, 2));
+            ->andReturn(new Stream($resource));
+
         $guzzleClientMock = Mockery::mock(GuzzleClient::class);
-        $guzzleClientMock
-            ->shouldReceive('get')
+        $guzzleClientMock->shouldReceive('get')
+            ->once()
             ->withArgs(function ($endpoint, $details) {
                 return $endpoint === 'geocode/json'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
             })
-            ->once()
             ->andReturn($responseMock);
 
-        // execute
         $client = new Client('test_google_api_key', $guzzleClientMock);
         $result = $client->geocode('1234 Rainbow Road');
 
-        // assert
         $this->assertNotNull($result);
-        $this->assertEquals(1, $result->lat);
-        $this->assertEquals(2, $result->lng);
-        $this->assertObjectHasAttribute('data', $result);
+        $this->assertEquals(1.0, $result->lat);
+        $this->assertEquals(2.0, $result->lng);
+        $this->assertObjectHasProperty('data', $result);
         $this->assertNotNull($result->data);
-        $this->assertEquals($this->getGeocodeResponse('OK', 1, 2), json_encode($result->data));
+        $this->assertEquals($this->getGeocodeResponse('OK', 1.0, 2.0), json_encode($result->data));
     }
 
-    public function test_geocode_returns_null_if_geocoding_fails()
+    #[Test]
+    public function it_returns_null_if_geocoding_fails(): void
     {
-        // mocks
+        $expectedJsonString = $this->getGeocodeResponse('ZERO_RESULTS', 0.0, 0.0);
+        $resource = fopen('php://temp', 'r+');
+        fwrite($resource, $expectedJsonString);
+        fseek($resource, 0);
+
         $responseMock = Mockery::mock(Response::class);
-        $responseMock
-            ->shouldReceive('getBody')
+        $responseMock->shouldReceive('getBody')
             ->once()
-            ->andReturn($this->getGeocodeResponse('NO_RESULTS', 1, 2));
+            ->andReturn(new Stream($resource));
+
         $guzzleClientMock = Mockery::mock(GuzzleClient::class);
-        $guzzleClientMock
-            ->shouldReceive('get')
+        $guzzleClientMock->shouldReceive('get')
+            ->once()
             ->withArgs(function ($endpoint, $details) {
                 return $endpoint === 'geocode/json'
                     && $details['query']['address'] === '1234 Rainbow Road'
                     && $details['query']['key'] === 'test_google_api_key';
             })
-            ->once()
             ->andReturn($responseMock);
 
-        // execute
         $client = new Client('test_google_api_key', $guzzleClientMock);
         $result = $client->geocode('1234 Rainbow Road');
 
-        // assert
         $this->assertNull($result);
     }
 
-    /**
-     *  @expectedException \Lawnstarter\Geocoding\GeocodingException
-     */
-    public function test_geocode_throws_exception_when_unexpected_exception_occurs()
+    #[Test]
+    public function it_throws_a_geocoding_exception_on_error(): void
     {
-        // mocks
-        $guzzleClientMock = Mockery::mock(GuzzleClient::class);
-        $guzzleClientMock
-            ->shouldReceive('get')
-            ->withArgs(function ($endpoint, $details) {
-                return $endpoint === 'geocode/json'
-                    && $details['query']['address'] === '1234 Rainbow Road'
-                    && $details['query']['key'] === 'test_google_api_key';
-            })
-            ->once()
-            ->andThrow(new \Exception('test exception'));
+        $this->expectException(GeocodingException::class);
+        $this->expectExceptionMessage('test exception');
 
-        // execute
+        $guzzleClientMock = Mockery::mock(GuzzleClient::class);
+        $guzzleClientMock->shouldReceive('get')
+            ->once()
+            ->andThrow(new Exception('test exception'));
+
         $client = new Client('test_google_api_key', $guzzleClientMock);
-        $result = $client->geocode('1234 Rainbow Road');
+        $client->geocode('1234 Rainbow Road');
     }
 }
